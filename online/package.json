@@ -1,0 +1,10 @@
+{
+  "name": "age-of-animals-lobby",
+  "version": "1.0.0",
+  "description": "Online matchmaking lobby server for Age of Animals",
+  "main": "lobby_server.js",
+  "scripts": {
+    "start": "node lobby_server.js"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,47 @@
+# Unreal Engine 5 .gitignore
+
+# Build directories
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+*.VC.db
+*.VC.opendb
+*.VC.db.WAL
+*.pdb
+
+# Compiled binaries
+*.exe
+*.dll
+*.lib
+*.app
+
+# Visual Studio
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+
+# JetBrains / Rider
+.idea/
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs
+*.log
+
+# Leftover non-UE files from earlier attempt
+CMakeLists.txt
+src/
+third_party/
+assets/
+maps/
+
+# Node
+node_modules/
