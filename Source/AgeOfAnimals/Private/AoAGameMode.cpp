@@ -11,30 +11,12 @@
 
 AAoAGameMode::AAoAGameMode()
 {
-	// Use our custom classes
-	static ConstructorHelpers::FClassFinder<APlayerController> PCFinder(
-		TEXT("/Game/Blueprints/BP_AoAPlayerController"));
-	if (PCFinder.Succeeded())
-		PlayerControllerClass = PCFinder.Class;
-	else
-		PlayerControllerClass = AAoAPlayerController::StaticClass();
-
-	static ConstructorHelpers::FClassFinder<AGameStateBase> GSFinder(
-		TEXT("/Game/Blueprints/BP_AoAGameState"));
-	if (GSFinder.Succeeded())
-		GameStateClass = GSFinder.Class;
-	else
-		GameStateClass = AAoAGameState::StaticClass();
-
-	static ConstructorHelpers::FClassFinder<APlayerState> PSFinder(
-		TEXT("/Game/Blueprints/BP_AoAPlayerState"));
-	if (PSFinder.Succeeded())
-		PlayerStateClass = PSFinder.Class;
-	else
-		PlayerStateClass = AAoAPlayerState::StaticClass();
+	// Use C++ classes directly — Blueprint subclasses can be created later
+	PlayerControllerClass = AAoAPlayerController::StaticClass();
+	GameStateClass = AAoAGameState::StaticClass();
+	PlayerStateClass = AAoAPlayerState::StaticClass();
 
 	bUseSeamlessTravel = true;
-	// MinNetUpdateFrequency set via config
 }
 
 void AAoAGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -47,7 +29,6 @@ void AAoAGameMode::InitGame(const FString& MapName, const FString& Options, FStr
 	auto* GI = Cast<UAoAGameInstance>(GetGameInstance());
 	if (GI)
 	{
-		// Determine match type from options
 		FString MatchTypeStr = UGameplayStatics::ParseOption(Options, TEXT("MatchType"));
 		if (MatchTypeStr == TEXT("LAN"))
 			MatchType = EMatchType::LANHost;
@@ -57,7 +38,7 @@ void AAoAGameMode::InitGame(const FString& MapName, const FString& Options, FStr
 
 	if (auto* GS = Cast<AAoAGameState>(GameState))
 	{
-		GS->MatchSeed = FString::Printf(TEXT("%u"), RandomSeed);
+		GS->MatchSeed = FString::Printf(TEXT("%d"), RandomSeed);
 		GS->Phase = EGamePhase::Preparing;
 	}
 }
@@ -103,8 +84,7 @@ void AAoAGameMode::SpawnStartingBase(AAoAPlayerController* PC, const FVector& Lo
 
 FVector AAoAGameMode::FindSpawnLocation() const
 {
-	// Spread players across the map
-	float MapExtent = MapSize.X * 100.0f; // 1 tile = 100 cm
+	float MapExtent = MapSize.X * 100.0f;
 	TArray<FVector> Candidates;
 	Candidates.Add(FVector(MapExtent * 0.2f, MapExtent * 0.2f, 0.0f));
 	Candidates.Add(FVector(MapExtent * 0.8f, MapExtent * 0.8f, 0.0f));
@@ -161,7 +141,7 @@ void AAoAGameMode::CheckWinCondition()
 		}
 		else if (AlivePlayers.Num() == 0)
 		{
-			GS->WinnerPlayerId = -1; // draw
+			GS->WinnerPlayerId = -1;
 			GS->Phase = EGamePhase::Ended;
 		}
 	}

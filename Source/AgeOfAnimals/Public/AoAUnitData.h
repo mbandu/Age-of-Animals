@@ -39,7 +39,7 @@ struct FResourceCost
  * Each empire has four of these (villager, warrior, archer, special).
  */
 UCLASS(BlueprintType, Const)
-class UAoAUnitData : public UPrimaryDataAsset
+class UAoAUnitData : public UDataAsset
 {
 	GENERATED_BODY()
 
@@ -113,8 +113,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
 	TArray<TObjectPtr<USoundBase>> VoiceSounds;
 
-	FPrimaryAssetId GetPrimaryAssetId() const override
-	{
-		return FPrimaryAssetId("AoAUnit", *UnitName.ToString());
-	}
+
 };

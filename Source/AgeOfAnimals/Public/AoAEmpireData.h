@@ -51,7 +51,7 @@ struct FEmpireBonus
  * bonus, and references to its unit/building data assets.
  */
 UCLASS(BlueprintType, Const)
-class UAoAEmpireData : public UPrimaryDataAsset
+class UAoAEmpireData : public UDataAsset
 {
 	GENERATED_BODY()
 
@@ -88,9 +88,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
 	TObjectPtr<USoundBase> AttackSound;
 
-	FPrimaryAssetId GetPrimaryAssetId() const override
-	{
-		return FPrimaryAssetId("AoAEmpire", *EmpireName.ToString());
-	}
+
 };
 

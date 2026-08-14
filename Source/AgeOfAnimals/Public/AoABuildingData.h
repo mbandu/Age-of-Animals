@@ -20,7 +20,7 @@ enum class EBuildingRole : uint8
  * Data asset defining a building type.
  */
 UCLASS(BlueprintType, Const)
-class UAoABuildingData : public UPrimaryDataAsset
+class UAoABuildingData : public UDataAsset
 {
 	GENERATED_BODY()
 
@@ -74,8 +74,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
 	TObjectPtr<UTexture2D> PortraitTexture;
 
-	FPrimaryAssetId GetPrimaryAssetId() const override
-	{
-		return FPrimaryAssetId("AoABuilding", *BuildingName.ToString());
-	}
+
 };
