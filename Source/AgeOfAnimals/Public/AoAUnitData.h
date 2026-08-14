@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "AoAEmpireData.h"
+#include "PaperFlipbook.h"
+#include "Engine/Texture2D.h"
 #include "AoAUnitData.generated.h"
 
 UENUM(BlueprintType)

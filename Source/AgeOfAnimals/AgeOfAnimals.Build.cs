@@ -19,9 +19,11 @@ public class AgeOfAnimals : ModuleRules
 			"Paper2D",
 			"OnlineSubsystem",
 			"OnlineSubsystemUtils",
-			"OnlineServicesInterface",
 			"Slate",
 			"SlateCore",
+			"HTTP",
+			"Json",
+			"JsonUtilities",
 			"UMG",
 			"Niagara",
 		});
@@ -39,3 +41,4 @@ public class AgeOfAnimals : ModuleRules
 		}
 	}
 }
+

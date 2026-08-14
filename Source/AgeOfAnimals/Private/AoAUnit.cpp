@@ -1,6 +1,8 @@
 #include "EngineUtils.h"
+#include "Engine/Engine.h"
 #include "AoAUnit.h"
 #include "AoAUnitAIController.h"
+#include "AIController.h"
 #include "AoAPlayerState.h"
 #include "AoAResourceNode.h"
 #include "AoABuilding.h"
@@ -10,6 +12,7 @@
 #include "AoAGameMode.h"
 #include "Net/UnrealNetwork.h"
 #include "NavigationSystem.h"
+#include "Navigation/PathFollowingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
@@ -158,10 +161,8 @@ void AAoAUnit::UpdateCombat(float DeltaTime)
 	if (Dist > AttackRange)
 	{
 		// Move closer
-		UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-		if (NavSys)
 		{
-			NavSys->SimpleMoveToActor(GetController(), Cast<AActor>(CurrentTarget));
+			if (AAIController* AIC = Cast<AAIController>(GetController())) { AIC->MoveToLocation(CurrentTarget->GetActorLocation(), 0.1f, true, true, true, false, 0, false); }
 		}
 		return;
 	}
@@ -204,9 +205,7 @@ void AAoAUnit::UpdateGathering(float DeltaTime)
 				}
 				else
 				{
-					UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-					if (NavSys)
-						NavSys->SimpleMoveToLocation(GetController(), DropOff->GetActorLocation());
+						if (AAIController* AIC = Cast<AAIController>(GetController())) { AIC->MoveToLocation(DropOff->GetActorLocation(), 0.1f, true, true, true, false, 0, false); }
 				}
 			}
 		}
@@ -221,9 +220,7 @@ void AAoAUnit::UpdateGathering(float DeltaTime)
 	if (Dist > 120.0f)
 	{
 		// Move to resource
-		UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-		if (NavSys)
-			NavSys->SimpleMoveToLocation(GetController(), CurrentResourceNode->GetActorLocation());
+		if (AAIController* AIC = Cast<AAIController>(GetController())) { AIC->MoveToLocation(CurrentResourceNode->GetActorLocation(), 0.1f, true, true, true, false, 0, false); }
 		return;
 	}
 
@@ -257,9 +254,7 @@ void AAoAUnit::UpdateBuilding(float DeltaTime)
 	float Dist = FVector::Dist2D(GetActorLocation(), PendingBuilding->GetActorLocation());
 	if (Dist > 200.0f)
 	{
-		UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-		if (NavSys)
-			NavSys->SimpleMoveToLocation(GetController(), PendingBuilding->GetActorLocation());
+		if (AAIController* AIC = Cast<AAIController>(GetController())) { AIC->MoveToLocation(PendingBuilding->GetActorLocation(), 0.1f, true, true, true, false, 0, false); }
 		return;
 	}
 
@@ -300,9 +295,7 @@ void AAoAUnit::CommandMove(const FVector& Location)
 	CurrentTarget = nullptr;
 	CurrentResourceNode = nullptr;
 
-	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-	if (NavSys)
-		NavSys->SimpleMoveToLocation(GetController(), Location);
+		if (AAIController* AIC = Cast<AAIController>(GetController())) { AIC->MoveToLocation(Location, 0.1f, true, true, true, false, 0, false); }
 }
 
 void AAoAUnit::CommandAttackTarget(AActor* Target)
@@ -317,9 +310,7 @@ void AAoAUnit::CommandAttackGround(const FVector& Location)
 	if (!HasAuthority()) return;
 	State = EUnitState::Moving;
 	// Move to location, then attack anything nearby
-	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-	if (NavSys)
-		NavSys->SimpleMoveToLocation(GetController(), Location);
+		if (AAIController* AIC = Cast<AAIController>(GetController())) { AIC->MoveToLocation(Location, 0.1f, true, true, true, false, 0, false); }
 }
 
 void AAoAUnit::CommandGather(AAoAResourceNode* Resource)
@@ -445,7 +436,7 @@ void AAoAUnit::SpawnProjectile(AActor* Target)
 		EnemyBld->ApplyDamage(AttackDamage);
 }
 
-AAoAUnit* AAoAUnit::FindByID(UObject* WorldContext, uint32 ID)
+AAoAUnit* AAoAUnit::FindByID(UObject* WorldContext, int32 ID)
 {
 	UWorld* World = GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull);
 	if (!World) return nullptr;

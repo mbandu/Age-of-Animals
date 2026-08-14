@@ -21,6 +21,8 @@ public class AgeOfAnimalsEditor : ModuleRules
 			"AssetTools",
 			"AssetRegistry",
 			"ContentBrowser",
+			"Json",
+			"JsonUtilities",
 			"InputCore",
 			"ToolMenus",
 		});

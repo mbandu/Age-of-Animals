@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Sound/SoundBase.h"
 #include "AoAEmpireData.generated.h"
 
 UENUM(BlueprintType)

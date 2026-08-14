@@ -3,7 +3,6 @@
 
 AAoAUnitAIController::AAoAUnitAIController()
 {
-	bIsAI = true;
 }
 
 void AAoAUnitAIController::OnPossess(APawn* InPawn)

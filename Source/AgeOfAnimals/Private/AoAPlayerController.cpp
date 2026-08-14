@@ -372,9 +372,9 @@ void AAoAPlayerController::RequestEmpireChange(int32 EmpireIndex)
 TArray<uint32> AAoAPlayerController::GetSelectedUnitIDs() const
 {
 	TArray<uint32> IDs;
-	for (auto* Actor : SelectedActors)
+	for (AActor* Actor : SelectedActors)
 	{
-		if (auto* Unit = Cast<AAoAUnit>(Actor))
+		if (AAoAUnit* Unit = Cast<AAoAUnit>(Actor))
 			IDs.Add(Unit->GetNetworkID());
 	}
 	return IDs;

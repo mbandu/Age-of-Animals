@@ -34,7 +34,7 @@ AAoAGameMode::AAoAGameMode()
 		PlayerStateClass = AAoAPlayerState::StaticClass();
 
 	bUseSeamlessTravel = true;
-	MinNetUpdateFrequency = 20.0f;
+	// MinNetUpdateFrequency set via config
 }
 
 void AAoAGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)

@@ -54,22 +54,22 @@ void UAoAOnlineLobby::RequestRoomList()
 		if (FJsonSerializer::Deserialize(Reader, RootObj))
 		{
 			const TArray<TSharedPtr<FJsonValue>>* RoomsArray;
-			if (RootObj->TryGetArrayField("rooms", RoomsArray))
+			if (RootObj->TryGetArrayField(TEXT("rooms"), RoomsArray))
 			{
 				for (const auto& RoomVal : *RoomsArray)
 				{
 					TSharedPtr<FJsonObject> RoomObj = RoomVal->AsObject();
 					if (!RoomObj) continue;
 					FAoAOnlineRoom Room;
-					Room.RoomID = RoomObj->GetStringField("id");
-					Room.HostName = RoomObj->GetStringField("hostName");
-					Room.HostEmpireIndex = RoomObj->GetIntegerField("hostEmpire");
-					Room.NumPlayers = RoomObj->GetIntegerField("numPlayers");
-					Room.MaxPlayers = RoomObj->GetIntegerField("maxPlayers");
-					Room.HostIP = RoomObj->GetStringField("hostIP");
-					Room.HostPort = RoomObj->GetIntegerField("hostPort");
-					Room.bIsPrivate = RoomObj->GetBoolField("isPrivate");
-					Room.MapName = RoomObj->GetStringField("mapName");
+					Room.RoomID = RoomObj->GetStringField(TEXT("id"));
+					Room.HostName = RoomObj->GetStringField(TEXT("hostName"));
+					Room.HostEmpireIndex = RoomObj->GetIntegerField(TEXT("hostEmpire"));
+					Room.NumPlayers = RoomObj->GetIntegerField(TEXT("numPlayers"));
+					Room.MaxPlayers = RoomObj->GetIntegerField(TEXT("maxPlayers"));
+					Room.HostIP = RoomObj->GetStringField(TEXT("hostIP"));
+					Room.HostPort = RoomObj->GetIntegerField(TEXT("hostPort"));
+					Room.bIsPrivate = RoomObj->GetBoolField(TEXT("isPrivate"));
+					Room.MapName = RoomObj->GetStringField(TEXT("mapName"));
 					ParsedRooms.Add(Room);
 				}
 			}
@@ -83,12 +83,12 @@ void UAoAOnlineLobby::RequestRoomList()
 void UAoAOnlineLobby::CreateRoom(const FString& RoomName, int32 MaxPlayers, const FString& MapName, bool bPrivate)
 {
 	TSharedPtr<FJsonObject> Body = MakeShared<FJsonObject>();
-	Body->SetStringField("roomName", RoomName);
-	Body->SetStringField("playerName", PlayerName);
-	Body->SetNumberField("empireIndex", SelectedEmpire);
-	Body->SetNumberField("maxPlayers", MaxPlayers);
-	Body->SetStringField("mapName", MapName);
-	Body->SetBoolField("isPrivate", bPrivate);
+	Body->SetStringField(TEXT("roomName"), RoomName);
+	Body->SetStringField(TEXT("playerName"), PlayerName);
+	Body->SetNumberField(TEXT("empireIndex"), SelectedEmpire);
+	Body->SetNumberField(TEXT("maxPlayers"), MaxPlayers);
+	Body->SetStringField(TEXT("mapName"), MapName);
+	Body->SetBoolField(TEXT("isPrivate"), bPrivate);
 
 	FString BodyStr;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&BodyStr);
@@ -107,10 +107,10 @@ void UAoAOnlineLobby::CreateRoom(const FString& RoomName, int32 MaxPlayers, cons
 		if (FJsonSerializer::Deserialize(Reader, RootObj))
 		{
 			FAoAOnlineRoom Room;
-			Room.RoomID = RootObj->GetStringField("id");
-			Room.HostName = RootObj->GetStringField("hostName");
-			Room.HostIP = RootObj->GetStringField("hostIP");
-			Room.HostPort = RootObj->GetIntegerField("hostPort");
+			Room.RoomID = RootObj->GetStringField(TEXT("id"));
+			Room.HostName = RootObj->GetStringField(TEXT("hostName"));
+			Room.HostIP = RootObj->GetStringField(TEXT("hostIP"));
+			Room.HostPort = RootObj->GetIntegerField(TEXT("hostPort"));
 			CurrentRoomID = Room.RoomID;
 			OnRoomCreated.Broadcast(Room);
 		}
@@ -120,8 +120,8 @@ void UAoAOnlineLobby::CreateRoom(const FString& RoomName, int32 MaxPlayers, cons
 void UAoAOnlineLobby::JoinRoom(const FString& RoomID)
 {
 	TSharedPtr<FJsonObject> Body = MakeShared<FJsonObject>();
-	Body->SetStringField("playerName", PlayerName);
-	Body->SetNumberField("empireIndex", SelectedEmpire);
+	Body->SetStringField(TEXT("playerName"), PlayerName);
+	Body->SetNumberField(TEXT("empireIndex"), SelectedEmpire);
 
 	FString BodyStr;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&BodyStr);
@@ -143,8 +143,8 @@ void UAoAOnlineLobby::JoinRoom(const FString& RoomID)
 		int32 HostPort = 7777;
 		if (FJsonSerializer::Deserialize(Reader, RootObj))
 		{
-			HostIP = RootObj->GetStringField("hostIP");
-			HostPort = RootObj->GetIntegerField("hostPort");
+			HostIP = RootObj->GetStringField(TEXT("hostIP"));
+			HostPort = RootObj->GetIntegerField(TEXT("hostPort"));
 		}
 
 		CurrentRoomID = RoomID;
@@ -161,7 +161,7 @@ void UAoAOnlineLobby::LeaveRoom()
 	if (CurrentRoomID.IsEmpty()) return;
 
 	TSharedPtr<FJsonObject> Body = MakeShared<FJsonObject>();
-	Body->SetStringField("playerName", PlayerName);
+	Body->SetStringField(TEXT("playerName"), PlayerName);
 
 	FString BodyStr;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&BodyStr);

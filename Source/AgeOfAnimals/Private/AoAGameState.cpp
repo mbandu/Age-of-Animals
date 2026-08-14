@@ -4,7 +4,7 @@
 AAoAGameState::AAoAGameState()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bReplicated = true;
+	bReplicates = true;
 }
 
 void AAoAGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

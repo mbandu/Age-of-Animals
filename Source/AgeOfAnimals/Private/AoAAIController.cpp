@@ -12,7 +12,6 @@
 AAoAAIController::AAoAAIController()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bIsAI = true;
 }
 
 void AAoAAIController::Tick(float DeltaTime)
@@ -33,7 +32,7 @@ void AAoAAIController::Tick(float DeltaTime)
 TArray<AAoAUnit*> AAoAAIController::GetMyUnits(int32 RoleFilter) const
 {
 	TArray<AAoAUnit*> Result;
-	auto* PS = Cast<AAoAPlayerState>(PlayerState);
+	AAoAPlayerState* PS = Cast<AAoAPlayerState>(PlayerState);
 	if (!PS) return Result;
 	for (TActorIterator<AAoAUnit> It(GetWorld()); It; ++It)
 	{
@@ -47,7 +46,7 @@ TArray<AAoAUnit*> AAoAAIController::GetMyUnits(int32 RoleFilter) const
 TArray<AAoABuilding*> AAoAAIController::GetMyBuildings(int32 RoleFilter) const
 {
 	TArray<AAoABuilding*> Result;
-	auto* PS = Cast<AAoAPlayerState>(PlayerState);
+	AAoAPlayerState* PS = Cast<AAoAPlayerState>(PlayerState);
 	if (!PS) return Result;
 	for (TActorIterator<AAoABuilding> It(GetWorld()); It; ++It)
 	{
@@ -60,7 +59,7 @@ TArray<AAoABuilding*> AAoAAIController::GetMyBuildings(int32 RoleFilter) const
 
 void AAoAAIController::ThinkEconomy()
 {
-	auto* PS = Cast<AAoAPlayerState>(PlayerState);
+	AAoAPlayerState* PS = Cast<AAoAPlayerState>(PlayerState);
 	if (!PS) return;
 
 	auto Villagers = GetMyUnits(0); // role 0 = villager
@@ -112,7 +111,7 @@ void AAoAAIController::ThinkEconomy()
 
 void AAoAAIController::ThinkMilitary()
 {
-	auto* PS = Cast<AAoAPlayerState>(PlayerState);
+	AAoAPlayerState* PS = Cast<AAoAPlayerState>(PlayerState);
 	if (!PS) return;
 
 	auto Barracks = GetMyBuildings(2);
@@ -169,7 +168,7 @@ void AAoAAIController::LaunchAttack()
 
 AAoABuilding* AAoAAIController::FindNearestEnemyBuilding() const
 {
-	auto* PS = Cast<AAoPlayerState>(PlayerState);
+	auto* PS = Cast<AAoAPlayerState>(PlayerState);
 	if (!PS) return nullptr;
 
 	AAoABuilding* Best = nullptr;
@@ -190,4 +189,5 @@ AAoABuilding* AAoAAIController::FindNearestEnemyBuilding() const
 	}
 	return Best;
 }
+
 

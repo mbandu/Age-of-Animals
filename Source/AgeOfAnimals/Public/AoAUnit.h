@@ -40,7 +40,7 @@ public:
 
 	// ---- Identity ----
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Unit")
-	uint32 NetworkID = 0;
+	int32 NetworkID = 0;
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Unit")
 	int32 OwnerPlayerId = -1;
@@ -128,7 +128,7 @@ public:
 	void SetEmpireIndex(int32 Empire) { EmpireIndex = Empire; }
 
 	UFUNCTION(BlueprintCallable, Category = "Unit")
-	uint32 GetNetworkID() const { return NetworkID; }
+	int32 GetNetworkID() const { return NetworkID; }
 
 	UFUNCTION(BlueprintCallable, Category = "Unit")
 	bool IsVillager() const { return UnitRoleIndex == 0; }
@@ -147,7 +147,7 @@ public:
 
 	// Static lookup by network ID
 	UFUNCTION(BlueprintCallable, Category = "Unit", meta = (WorldContext = "WorldContext"))
-	static AAoAUnit* FindByID(UObject* WorldContext, uint32 ID);
+	static AAoAUnit* FindByID(UObject* WorldContext, int32 ID);
 
 protected:
 	// Internal state

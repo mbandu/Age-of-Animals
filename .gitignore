@@ -45,3 +45,7 @@ maps/
 
 # Node
 node_modules/
+
+# Temporary fix scripts
+fix_*.py
+

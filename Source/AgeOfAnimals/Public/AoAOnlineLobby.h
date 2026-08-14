@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Interfaces/IHttpRequest.h"
+#include "TimerManager.h"
 #include "AoAOnlineLobby.generated.h"
 
 /** A single room/match in the online lobby */

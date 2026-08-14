@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "AoAUnitData.h"
+#include "Engine/Texture2D.h"
+#include "Engine/StaticMesh.h"
 #include "AoABuildingData.generated.h"
 
 UENUM(BlueprintType)

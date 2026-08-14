@@ -1,13 +1,13 @@
+#include "Kismet/GameplayStatics.h"
 #include "EngineUtils.h"
 #include "AoALevelEditorTool.h"
 #include "ToolMenus.h"
 #include "LevelEditor.h"
-#include "Editor/LevelEditor/Public/LevelEditorViewport.h"
+#include "LevelEditorViewport.h"
 #include "Engine/Selection.h"
 #include "Engine/StaticMeshActor.h"
-#include "AssetRegistry/AssetRegistryModule.h"
-#include "FileHelpers.h"
 #include "JsonObjectConverter.h"
+#include "JsonObjectWrapper.h"
 #include "JsonUtilities.h"
 #include "HAL/FileManager.h"
 
@@ -26,7 +26,7 @@ void UAoALevelEditorTool::RegisterToolbar()
 
 	Section.AddEntry(FToolMenuEntry::InitToolBarButton(
 		"AoA_TerrainPaint",
-		FExecuteAction::CreateStatic(&OnTerrainPaintClicked),
+		FExecuteAction::CreateLambda([](){ OnTerrainPaintClicked(nullptr); }),
 		FText::FromString("Terrain"),
 		FText::FromString("Paint terrain tiles"),
 		FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Terrain.Edit")
@@ -34,7 +34,7 @@ void UAoALevelEditorTool::RegisterToolbar()
 
 	Section.AddEntry(FToolMenuEntry::InitToolBarButton(
 		"AoA_PlaceResource",
-		FExecuteAction::CreateStatic(&OnResourcePlaceClicked),
+		FExecuteAction::CreateLambda([](){ OnResourcePlaceClicked(nullptr); }),
 		FText::FromString("Resources"),
 		FText::FromString("Place resource nodes"),
 		FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Resources")
@@ -42,7 +42,7 @@ void UAoALevelEditorTool::RegisterToolbar()
 
 	Section.AddEntry(FToolMenuEntry::InitToolBarButton(
 		"AoA_GenerateMap",
-		FExecuteAction::CreateStatic(&OnGenerateMapClicked),
+		FExecuteAction::CreateLambda([](){ OnGenerateMapClicked(nullptr); }),
 		FText::FromString("Generate"),
 		FText::FromString("Generate random map"),
 		FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Generate")
@@ -50,7 +50,7 @@ void UAoALevelEditorTool::RegisterToolbar()
 
 	Section.AddEntry(FToolMenuEntry::InitToolBarButton(
 		"AoA_SaveMap",
-		FExecuteAction::CreateStatic(&OnSaveMapClicked),
+		FExecuteAction::CreateLambda([](){ OnSaveMapClicked(nullptr); }),
 		FText::FromString("Save Map"),
 		FText::FromString("Save map to file"),
 		FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Save")
@@ -58,7 +58,7 @@ void UAoALevelEditorTool::RegisterToolbar()
 
 	Section.AddEntry(FToolMenuEntry::InitToolBarButton(
 		"AoA_LoadMap",
-		FExecuteAction::CreateStatic(&OnLoadMapClicked),
+		FExecuteAction::CreateLambda([](){ OnLoadMapClicked(nullptr); }),
 		FText::FromString("Load Map"),
 		FText::FromString("Load map from file"),
 		FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Load")
@@ -103,7 +103,7 @@ void UAoALevelEditorTool::MarkSpawnPoint(int32 EmpireIndex, const FVector& Locat
 	// This is used by the game mode to place starting bases
 }
 
-void UAoALevelEditorTool::GenerateRandomMap(uint32 Seed, int32 MapSize)
+void UAoALevelEditorTool::GenerateRandomMap(int32 Seed, int32 MapSize)
 {
 	// Procedurally generate a map using value noise:
 	// - Low areas = water
@@ -119,7 +119,7 @@ void UAoALevelEditorTool::GenerateRandomMap(uint32 Seed, int32 MapSize)
 
 	// Clear existing terrain actors
 	TArray<AActor*> ExistingTerrain;
-	UGameplayStatics::GetAllActorsWithTag(World, "Terrain", ExistingTerrain);
+	UGameplayStatics::GetAllActorsWithTag(World, FName("Terrain"), ExistingTerrain);
 	for (auto* Actor : ExistingTerrain)
 		Actor->Destroy();
 
@@ -181,9 +181,9 @@ bool UAoALevelEditorTool::SaveMap(const FString& FilePath)
 	// }
 
 	TSharedPtr<FJsonObject> RootObj = MakeShared<FJsonObject>();
-	RootObj->SetNumberField("version", 1);
-	RootObj->SetNumberField("mapSizeX", 64);
-	RootObj->SetNumberField("mapSizeY", 64);
+	RootObj->SetNumberField(TEXT("version"), 1);
+	RootObj->SetNumberField(TEXT("mapSizeX"), 64);
+	RootObj->SetNumberField(TEXT("mapSizeY"), 64);
 
 	// Collect all actors with terrain/resource/spawn tags and serialize
 	// This is a simplified version
@@ -205,8 +205,8 @@ bool UAoALevelEditorTool::LoadMap(const FString& FilePath)
 	if (!FJsonSerializer::Deserialize(Reader, RootObj)) return false;
 
 	// Rebuild the level from the loaded JSON
-	int32 MapSizeX = RootObj->GetIntegerField("mapSizeX");
-	int32 MapSizeY = RootObj->GetIntegerField("mapSizeY");
+	int32 MapSizeX = RootObj->GetIntegerField(TEXT("mapSizeX"));
+	int32 MapSizeY = RootObj->GetIntegerField(TEXT("mapSizeY"));
 
 	// Spawn terrain, resources, and spawn points
 	return true;

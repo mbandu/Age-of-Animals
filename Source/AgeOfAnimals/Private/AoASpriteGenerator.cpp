@@ -2,19 +2,6 @@
 #include "AoASpriteGenerator.h"
 #include "Engine/Texture2D.h"
 #include "TextureResource.h"
-#include "Paper2D/Classes/PaperFlipbook.h"
-#include "Paper2D/Classes/PaperFlipbookFrame.h"
-#include "Paper2D/Classes/PaperSprite.h"
-#include "ImageWriteQueue.h"
-#include "ImageWriteTask.h"
-#include "IImageWrapper.h"
-#include "IImageWrapperModule.h"
-#include "Modules/ModuleManager.h"
-#include "AssetRegistry/AssetRegistryModule.h"
-#include "EditorAssetUtilities.h"
-#include "Package.h"
-#include "ObjectTools.h"
-#include "Factories/TextureFactory.h"
 #include "Math/UnrealMathUtility.h"
 #include <cmath>
 
@@ -202,11 +189,11 @@ UTexture2D* UAoASpriteGenerator::CreateTextureFromPixels(uint8* Pixels, int32 Si
 {
 	UTexture2D* Tex = UTexture2D::CreateTransient(Size, Size, PF_B8G8R8A8);
 	if (!Tex) return nullptr;
-	Tex->Name = *Name;
+	// Texture name set via asset system
 	Tex->SRGB = true;
 	Tex->UpdateResource();
 
-	FTexture2DMipMap& Mip = Tex->GetPlatformMips()[0];
+	FTexture2DMipMap& Mip = Tex->GetPlatformData()->Mips[0];
 	void* Data = Mip.BulkData.Lock(LOCK_READ_WRITE);
 	FMemory::Memcpy(Data, Pixels, Size * Size * 4);
 	Mip.BulkData.Unlock();

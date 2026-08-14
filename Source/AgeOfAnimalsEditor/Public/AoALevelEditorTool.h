@@ -40,7 +40,7 @@ public:
 
 	/** Generate a random map with the given seed */
 	UFUNCTION(BlueprintCallable, Category = "Level Editor")
-	static void GenerateRandomMap(uint32 Seed, int32 MapSize);
+	static void GenerateRandomMap(int32 Seed, int32 MapSize);
 
 	/** Save the current map to a .aoamap file */
 	UFUNCTION(BlueprintCallable, Category = "Level Editor")

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AoAPlayerState.h"
+#include "Components/StaticMeshComponent.h"
 #include "AoAResourceNode.generated.h"
 
 /**

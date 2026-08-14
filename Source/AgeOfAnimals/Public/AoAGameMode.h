@@ -69,11 +69,10 @@ public:
 	EMatchType MatchType = EMatchType::Skirmish;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Match")
-	uint32 RandomSeed = 0;
+	int32 RandomSeed = 0;
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
-	virtual void InitSeamlessTravelPlayer(AController* NewController) override;
-
+	
 	/** Spawns the starting town center + villagers for a player */
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SpawnStartingBase(AAoAPlayerController* PC, const FVector& Location);

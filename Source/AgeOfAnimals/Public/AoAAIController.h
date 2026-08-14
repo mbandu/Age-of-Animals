@@ -6,6 +6,7 @@
 
 class AAoAUnit;
 class AAoABuilding;
+class AAoAPlayerState;
 
 /**
  * AI opponent controller — manages an AI player's economy, production,
@@ -49,3 +50,4 @@ protected:
 	void TrainArmy();
 	void LaunchAttack();
 };
+

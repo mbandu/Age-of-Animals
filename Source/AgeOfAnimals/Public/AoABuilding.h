@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AoABuildingData.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/DecalComponent.h"
 #include "AoABuilding.generated.h"
 
 class AAoAUnit;
