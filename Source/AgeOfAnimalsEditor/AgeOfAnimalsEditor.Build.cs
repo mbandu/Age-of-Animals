@@ -12,19 +12,6 @@ public class AgeOfAnimalsEditor : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
-			"UnrealEd",
-			"Slate",
-			"SlateCore",
-			"EditorStyle",
-			"PropertyEditor",
-			"LevelEditor",
-			"AssetTools",
-			"AssetRegistry",
-			"ContentBrowser",
-			"Json",
-			"JsonUtilities",
-			"InputCore",
-			"ToolMenus",
 		});
 
 		PrivateDependencyModuleNames.Add("AgeOfAnimals");

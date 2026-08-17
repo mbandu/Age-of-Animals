@@ -13,30 +13,7 @@ public class AgeOfAnimals : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"NavigationSystem",
 			"AIModule",
-			"GameplayTasks",
-			"OnlineSubsystem",
-			"OnlineSubsystemUtils",
-			"Slate",
-			"SlateCore",
-			"HTTP",
-			"Json",
-			"JsonUtilities",
-			"UMG",
-			"Niagara",
 		});
-
-		PrivateDependencyModuleNames.AddRange(new string[]
-		{
-			"GameplayAbilities",
-			"EnhancedInput",
-			"DeveloperSettings",
-		});
-
-		if (Target.bBuildEditor)
-		{
-			PrivateDependencyModuleNames.Add("UnrealEd");
-		}
 	}
 }
