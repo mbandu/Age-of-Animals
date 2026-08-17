@@ -17,10 +17,6 @@
 	],
 	"Plugins": [
 		{
-			"Name": "Paper2D",
-			"Enabled": true
-		},
-		{
 			"Name": "OnlineSubsystem",
 			"Enabled": true
 		},

@@ -17,37 +17,37 @@ class AAoAPlayerState : public APlayerState
 public:
 	AAoAPlayerState();
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Empire")
+	UPROPERTY(BlueprintReadOnly, Category = "Empire")
 	int32 EmpireIndex = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Empire")
+	UPROPERTY(BlueprintReadOnly, Category = "Empire")
 	bool bIsAI = false;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Resources")
+	UPROPERTY(BlueprintReadOnly, Category = "Resources")
 	int32 Food = 200;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Resources")
+	UPROPERTY(BlueprintReadOnly, Category = "Resources")
 	int32 Wood = 150;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Resources")
+	UPROPERTY(BlueprintReadOnly, Category = "Resources")
 	int32 Stone = 100;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Resources")
+	UPROPERTY(BlueprintReadOnly, Category = "Resources")
 	int32 Gold = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Population")
+	UPROPERTY(BlueprintReadOnly, Category = "Population")
 	int32 PopulationUsed = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Population")
+	UPROPERTY(BlueprintReadOnly, Category = "Population")
 	int32 PopulationCap = 10;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game")
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	bool bIsAlive = true;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game")
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	int32 CurrentAge = 0; // 0=Tribal, 1=Bronze, 2=Iron
 
-	UPROPERTY(ReplicatedUsing = OnRep_Kills, BlueprintReadOnly, Category = "Stats")
+	UPROPERTY(BlueprintReadOnly, Category = "Stats")
 	int32 Kills = 0;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Stats")

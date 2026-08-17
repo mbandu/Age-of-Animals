@@ -5,7 +5,7 @@
 #include "AoASpriteGenerator.generated.h"
 
 class UTexture2D;
-class UPaperFlipbook;
+
 
 /**
  * Procedurally generates photorealistic, vibrant sprite textures for all
@@ -39,7 +39,7 @@ public:
 
 	/** Generate a full set of flipbook frames for a unit and assemble into a flipbook */
 	UFUNCTION(BlueprintCallable, Category = "Sprite Generation")
-	static UPaperFlipbook* GenerateUnitFlipbook(int32 EmpireIndex, int32 UnitRole, int32 Direction, int32 NumFrames = 8);
+	static UObject* GenerateUnitFlipbook(int32 EmpireIndex, int32 UnitRole, int32 Direction, int32 NumFrames = 8);
 
 	/** Generate all sprite assets for all 5 empires and save them to Content/ */
 	UFUNCTION(BlueprintCallable, Category = "Sprite Generation")
@@ -74,3 +74,4 @@ protected:
 	static FColor GetEmpireBodyColor(int32 EmpireIndex);
 	static FColor GetEmpireAccentColor(int32 EmpireIndex);
 };
+

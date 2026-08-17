@@ -32,17 +32,17 @@ public:
 	AAoABuilding();
 
 	// ---- Identity ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Building")
+	UPROPERTY(BlueprintReadOnly, Category = "Building")
 	int32 OwnerPlayerId = -1;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Building")
+	UPROPERTY(BlueprintReadOnly, Category = "Building")
 	int32 EmpireIndex = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Building")
+	UPROPERTY(BlueprintReadOnly, Category = "Building")
 	int32 BuildingRoleIndex = 0;
 
 	// ---- Stats ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Stats")
+	UPROPERTY(BlueprintReadOnly, Category = "Stats")
 	float CurrentHP = 1200.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Stats")
@@ -58,30 +58,30 @@ public:
 	bool bHasAttack = false;
 
 	// ---- Construction ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Construction")
+	UPROPERTY(BlueprintReadOnly, Category = "Construction")
 	EBuildingState BuildingState = EBuildingState::Complete;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Construction")
+	UPROPERTY(BlueprintReadOnly, Category = "Construction")
 	float ConstructionProgress = 0.0f; // 0 to 1
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Construction")
 	float ConstructionTime = 15.0f;
 
 	// ---- Training Queue ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Training")
-	TArray<TSubclassOf<AAoAUnit>> TrainQueue;
+	UPROPERTY(BlueprintReadOnly, Category = "Training")
+	TArray<UClass*> TrainQueue;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Training")
+	UPROPERTY(BlueprintReadOnly, Category = "Training")
 	float CurrentTrainProgress = 0.0f;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Training")
+	UPROPERTY(BlueprintReadOnly, Category = "Training")
 	float CurrentTrainTime = 0.0f;
 
 	// ---- Rally Point ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Rally")
+	UPROPERTY(BlueprintReadOnly, Category = "Rally")
 	FVector RallyPoint = FVector::ZeroVector;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Rally")
+	UPROPERTY(BlueprintReadOnly, Category = "Rally")
 	bool bRallySet = false;
 
 	// ---- Visuals ----
@@ -121,7 +121,7 @@ public:
 	void AddConstructionProgress(float DeltaProgress);
 
 	UFUNCTION(BlueprintCallable, Category = "Building")
-	void TrainUnit(TSubclassOf<AAoAUnit> UnitClass);
+	void TrainUnit(UClass* UnitClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Building")
 	void SetRallyPoint(const FVector& Location);
@@ -134,6 +134,6 @@ protected:
 
 	void UpdateTraining(float DeltaTime);
 	void UpdateDefense(float DeltaTime);
-	void SpawnTrainedUnit(TSubclassOf<AAoAUnit> UnitClass);
+	void SpawnTrainedUnit(UClass* UnitClass);
 	AActor* FindEnemyInRadius() const;
 };

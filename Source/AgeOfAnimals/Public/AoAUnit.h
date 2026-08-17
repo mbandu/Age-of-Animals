@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "PaperFlipbookComponent.h"
 #include "AoAUnitData.h"
 #include "AoAEmpireData.h"
 class AAoAUnitAIController;
@@ -39,20 +38,20 @@ public:
 	AAoAUnit();
 
 	// ---- Identity ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Unit")
+	UPROPERTY(BlueprintReadOnly, Category = "Unit")
 	int32 NetworkID = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Unit")
+	UPROPERTY(BlueprintReadOnly, Category = "Unit")
 	int32 OwnerPlayerId = -1;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Unit")
+	UPROPERTY(BlueprintReadOnly, Category = "Unit")
 	int32 EmpireIndex = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Unit")
+	UPROPERTY(BlueprintReadOnly, Category = "Unit")
 	int32 UnitRoleIndex = 0; // 0=villager, 1=warrior, 2=archer, 3=special
 
 	// ---- Stats ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Stats")
+	UPROPERTY(BlueprintReadOnly, Category = "Stats")
 	float CurrentHP = 40.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Stats")
@@ -71,24 +70,24 @@ public:
 	bool bIsRanged = false;
 
 	// ---- State ----
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "State")
+	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EUnitState State = EUnitState::Idle;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "State")
+	UPROPERTY(BlueprintReadOnly, Category = "State")
 	AActor* CurrentTarget = nullptr;
 
-	UPROPERTY(ReplicatedUsing = OnRep_CarryData, BlueprintReadOnly, Category = "Gathering")
+	UPROPERTY(BlueprintReadOnly, Category = "Gathering")
 	int32 CarryAmount = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Gathering")
+	UPROPERTY(BlueprintReadOnly, Category = "Gathering")
 	EResourceType CarryType = EResourceType::Food;
 
 	// ---- Visuals ----
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Visuals")
-	TObjectPtr<UPaperFlipbookComponent> SpriteComponent;
+	TObjectPtr<UStaticMeshComponent> SpriteComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Visuals")
-	TObjectPtr<class USceneComponent> SelectionRing;
+	TObjectPtr<class UStaticMeshComponent> SelectionRing;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
 	UMaterialInterface* SpriteMaterial;
@@ -112,7 +111,7 @@ public:
 	virtual void CommandGather(AAoAResourceNode* Resource);
 
 	UFUNCTION(BlueprintCallable, Category = "Commands")
-	virtual void CommandBuild(TSubclassOf<AAoABuilding> BuildingClass, const FVector& Location);
+	virtual void CommandBuild(UClass* BuildingClass, const FVector& Location);
 
 	UFUNCTION(BlueprintCallable, Category = "Commands")
 	virtual void CommandStop();
@@ -154,7 +153,7 @@ protected:
 	float AttackTimer = 0.0f;
 	float GatherTimer = 0.0f;
 	TWeakObjectPtr<AAoAResourceNode> CurrentResourceNode;
-	TSubclassOf<AAoABuilding> PendingBuildingClass;
+	UClass* PendingBuildingClass = nullptr;
 	FVector BuildLocation = FVector::ZeroVector;
 	TWeakObjectPtr<AAoABuilding> PendingBuilding;
 
@@ -184,4 +183,12 @@ protected:
 	// Play animation based on state and facing
 	void PlayFlipbookForState(EUnitState InState, float FacingAngle);
 };
+
+
+
+
+
+
+
+
 

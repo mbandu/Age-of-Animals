@@ -24,20 +24,12 @@ AAoAUnit::AAoAUnit()
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 
-	// Paper2D sprite component
-	SpriteComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Sprite"));
-	SpriteComponent->SetupAttachment(RootComponent);
-	SpriteComponent->SetCastShadow(false);
-	SpriteComponent->SetIsReplicated(false);
-
-	// Character movement config for RTS
-	GetCharacterMovement()->bOrientRotationToMovement = false;
-	GetCharacterMovement()->bUseControllerDesiredRotation = false;
-	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
-	GetCharacterMovement()->bConstrainToPlane = true;
-	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0, 0, 1));
-
-	bUseControllerRotationYaw = false;
+	// Sprite component
+	SpriteComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Sprite"));
+	if (RootComponent)
+	{
+		SpriteComponent->SetupAttachment(RootComponent);
+	}
 }
 
 void AAoAUnit::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -57,6 +49,18 @@ void AAoAUnit::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 void AAoAUnit::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// Configure character movement for RTS
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->bOrientRotationToMovement = false;
+		MoveComp->bUseControllerDesiredRotation = false;
+		MoveComp->MaxWalkSpeed = 300.0f;
+		MoveComp->bConstrainToPlane = true;
+		MoveComp->SetPlaneConstraintNormal(FVector(0, 0, 1));
+	}
+	bUseControllerRotationYaw = false;
+	
 	ResolveStats();
 	CurrentHP = MaxHP;
 
@@ -321,7 +325,7 @@ void AAoAUnit::CommandGather(AAoAResourceNode* Resource)
 	CurrentTarget = nullptr;
 }
 
-void AAoAUnit::CommandBuild(TSubclassOf<AAoABuilding> BuildingClass, const FVector& Location)
+void AAoAUnit::CommandBuild(UClass* BuildingClass, const FVector& Location)
 {
 	if (!HasAuthority()) return;
 	PendingBuildingClass = BuildingClass;
@@ -447,5 +451,8 @@ AAoAUnit* AAoAUnit::FindByID(UObject* WorldContext, int32 ID)
 	}
 	return nullptr;
 }
+
+
+
 
 

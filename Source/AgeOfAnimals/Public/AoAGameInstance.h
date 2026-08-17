@@ -63,7 +63,7 @@ public:
 
 	/** Empire data assets loaded from Content/ — indexed by EAnimalEmpire */
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
-	TArray<TObjectPtr<UAoAEmpireData>> EmpireAssets;
+	TArray<UObject*> EmpireAssets;
 
 	virtual void Init() override;
 

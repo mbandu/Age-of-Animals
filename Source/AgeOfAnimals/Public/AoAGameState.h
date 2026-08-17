@@ -24,16 +24,16 @@ class AAoAGameState : public AGameStateBase
 public:
 	AAoAGameState();
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game")
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	EGamePhase Phase = EGamePhase::Preparing;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game")
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	int32 WinnerPlayerId = -1;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game")
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	float MatchTime = 0.0f;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game")
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	FString MatchSeed;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

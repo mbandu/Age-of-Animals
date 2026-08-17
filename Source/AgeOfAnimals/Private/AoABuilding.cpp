@@ -104,7 +104,7 @@ void AAoABuilding::AddConstructionProgress(float DeltaProgress)
 	}
 }
 
-void AAoABuilding::TrainUnit(TSubclassOf<AAoAUnit> UnitClass)
+void AAoABuilding::TrainUnit(UClass* UnitClass)
 {
 	if (!HasAuthority()) return;
 	if (BuildingState != EBuildingState::Complete) return;
@@ -128,7 +128,7 @@ void AAoABuilding::UpdateTraining(float DeltaTime)
 	CurrentTrainProgress += DeltaTime;
 	if (CurrentTrainProgress >= CurrentTrainTime)
 	{
-		TSubclassOf<AAoAUnit> UnitClass = TrainQueue[0];
+		UClass* UnitClass = TrainQueue[0];
 		TrainQueue.RemoveAt(0);
 		SpawnTrainedUnit(UnitClass);
 
@@ -137,7 +137,7 @@ void AAoABuilding::UpdateTraining(float DeltaTime)
 	}
 }
 
-void AAoABuilding::SpawnTrainedUnit(TSubclassOf<AAoAUnit> UnitClass)
+void AAoABuilding::SpawnTrainedUnit(UClass* UnitClass)
 {
 	FVector SpawnLoc = GetActorLocation() + FVector(200, 0, 0);
 	FActorSpawnParameters SpawnParams;

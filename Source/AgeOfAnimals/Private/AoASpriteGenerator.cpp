@@ -730,7 +730,7 @@ UTexture2D* UAoASpriteGenerator::GenerateEmpirePortrait(int32 Empire, int32 Size
 	return Tex;
 }
 
-UPaperFlipbook* UAoASpriteGenerator::GenerateUnitFlipbook(int32 Empire, int32 Role, int32 Dir, int32 NumFrames)
+UObject* UAoASpriteGenerator::GenerateUnitFlipbook(int32 Empire, int32 Role, int32 Dir, int32 NumFrames)
 {
 	// In a complete build, this generates multiple sprite frames and creates
 	// a UPaperFlipbook asset. This requires editor-only functionality.
@@ -773,4 +773,5 @@ bool UAoASpriteGenerator::SaveTextureAsPNG(UTexture2D* Texture, const FString& P
 	// This is a simplified version — full implementation uses FImageWriteTask
 	return false;
 }
+
 

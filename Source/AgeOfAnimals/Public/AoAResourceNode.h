@@ -18,13 +18,13 @@ class AAoAResourceNode : public AActor
 public:
 	AAoAResourceNode();
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Resource")
+	UPROPERTY(BlueprintReadOnly, Category = "Resource")
 	EResourceType ResourceType = EResourceType::Wood;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Resource")
+	UPROPERTY(BlueprintReadOnly, Category = "Resource")
 	int32 RemainingAmount = 400;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Resource")
+	UPROPERTY(BlueprintReadOnly, Category = "Resource")
 	int32 MaxAmount = 400;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Visuals")

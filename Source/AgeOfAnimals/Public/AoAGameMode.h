@@ -57,10 +57,10 @@ public:
 	int32 MaxPlayers = 5;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Classes")
-	TSubclassOf<AAoAUnit> VillagerClass;
+	UClass* VillagerClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Classes")
-	TSubclassOf<AAoABuilding> TownCenterClass;
+	UClass* TownCenterClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Map")
 	FIntPoint MapSize = FIntPoint(64, 64);
@@ -91,3 +91,4 @@ protected:
 
 	void GiveStartingResources(AAoAPlayerState* PS);
 };
+

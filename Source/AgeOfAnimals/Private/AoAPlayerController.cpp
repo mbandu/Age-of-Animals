@@ -340,14 +340,14 @@ void AAoAPlayerController::IssueStopCommand()
 		Server_Stop(IDs);
 }
 
-void AAoAPlayerController::IssueBuildCommand(TSubclassOf<AAoABuilding> BuildingClass, const FVector& Location)
+void AAoAPlayerController::IssueBuildCommand(UClass* BuildingClass, const FVector& Location)
 {
 	TArray<uint32> IDs = GetSelectedUnitIDs();
 	if (!IDs.IsEmpty())
 		Server_Build(IDs, BuildingClass, Location);
 }
 
-void AAoAPlayerController::IssueTrainCommand(AAoABuilding* Building, TSubclassOf<AAoAUnit> UnitClass)
+void AAoAPlayerController::IssueTrainCommand(AAoABuilding* Building, UClass* UnitClass)
 {
 	if (Building && UnitClass)
 		Server_Train(Building, UnitClass);
@@ -432,21 +432,21 @@ void AAoAPlayerController::Server_Stop_Implementation(const TArray<uint32>& Unit
 }
 bool AAoAPlayerController::Server_Stop_Validate(const TArray<uint32>&) { return true; }
 
-void AAoAPlayerController::Server_Build_Implementation(const TArray<uint32>& UnitIDs, TSubclassOf<AAoABuilding> BuildingClass, FVector Location)
+void AAoAPlayerController::Server_Build_Implementation(const TArray<uint32>& UnitIDs, UClass* BuildingClass, FVector Location)
 {
 	if (UnitIDs.IsEmpty()) return;
 	auto* Builder = AAoAUnit::FindByID(GetWorld(), UnitIDs[0]);
 	if (Builder)
 		Builder->CommandBuild(BuildingClass, Location);
 }
-bool AAoAPlayerController::Server_Build_Validate(const TArray<uint32>&, TSubclassOf<AAoABuilding>, FVector) { return true; }
+bool AAoAPlayerController::Server_Build_Validate(const TArray<uint32>&, UClass*, FVector) { return true; }
 
-void AAoAPlayerController::Server_Train_Implementation(AAoABuilding* Building, TSubclassOf<AAoAUnit> UnitClass)
+void AAoAPlayerController::Server_Train_Implementation(AAoABuilding* Building, UClass* UnitClass)
 {
 	if (Building)
 		Building->TrainUnit(UnitClass);
 }
-bool AAoAPlayerController::Server_Train_Validate(AAoABuilding*, TSubclassOf<AAoAUnit>) { return true; }
+bool AAoAPlayerController::Server_Train_Validate(AAoABuilding*, UClass*) { return true; }
 
 void AAoAPlayerController::Server_SetRally_Implementation(AAoABuilding* Building, FVector Location)
 {

@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "AoAEmpireData.h"
-#include "PaperFlipbook.h"
 #include "Engine/Texture2D.h"
 #include "AoAUnitData.generated.h"
 
@@ -96,16 +95,16 @@ public:
 	float TrainTime = 7.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
-	TArray<TObjectPtr<UPaperFlipbook>> IdleFlipbooks; // per facing direction
+	TArray<UObject*> IdleFlipbooks; // per facing direction
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
-	TArray<TObjectPtr<UPaperFlipbook>> MoveFlipbooks;
+	TArray<UObject*> MoveFlipbooks;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
-	TArray<TObjectPtr<UPaperFlipbook>> AttackFlipbooks;
+	TArray<UObject*> AttackFlipbooks;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
-	TArray<TObjectPtr<UPaperFlipbook>> GatherFlipbooks;
+	TArray<UObject*> GatherFlipbooks;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
 	TObjectPtr<UTexture2D> PortraitTexture;

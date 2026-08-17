@@ -78,7 +78,7 @@ public:
 
 	// ---- Building Placement ----
 	UPROPERTY(BlueprintReadWrite, Category = "Placement")
-	TSubclassOf<AAoABuilding> PendingBuildingClass;
+	UClass* PendingBuildingClass = nullptr;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Placement")
 	int32 PendingBuildingEmpireIndex = 0;
@@ -132,10 +132,10 @@ public:
 	void IssueStopCommand();
 
 	UFUNCTION(BlueprintCallable, Category = "Commands")
-	void IssueBuildCommand(TSubclassOf<AAoABuilding> BuildingClass, const FVector& Location);
+	void IssueBuildCommand(UClass* BuildingClass, const FVector& Location);
 
 	UFUNCTION(BlueprintCallable, Category = "Commands")
-	void IssueTrainCommand(AAoABuilding* Building, TSubclassOf<AAoAUnit> UnitClass);
+	void IssueTrainCommand(AAoABuilding* Building, UClass* UnitClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Commands")
 	void IssueRallyPointCommand(AAoABuilding* Building, const FVector& Location);
@@ -188,10 +188,10 @@ protected:
 	void Server_Stop(const TArray<uint32>& UnitIDs);
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_Build(const TArray<uint32>& UnitIDs, TSubclassOf<AAoABuilding> BuildingClass, FVector Location);
+	void Server_Build(const TArray<uint32>& UnitIDs, UClass* BuildingClass, FVector Location);
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_Train(AAoABuilding* Building, TSubclassOf<AAoAUnit> UnitClass);
+	void Server_Train(AAoABuilding* Building, UClass* UnitClass);
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SetRally(AAoABuilding* Building, FVector Location);
@@ -202,3 +202,4 @@ protected:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SetEmpire(int32 EmpireIndex);
 };
+

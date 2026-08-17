@@ -16,7 +16,6 @@ public class AgeOfAnimals : ModuleRules
 			"NavigationSystem",
 			"AIModule",
 			"GameplayTasks",
-			"Paper2D",
 			"OnlineSubsystem",
 			"OnlineSubsystemUtils",
 			"Slate",
@@ -41,4 +40,3 @@ public class AgeOfAnimals : ModuleRules
 		}
 	}
 }
-

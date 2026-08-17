@@ -29,7 +29,7 @@ void UAoAGameInstance::LoadEmpireAssets()
 UAoAEmpireData* UAoAGameInstance::GetEmpireData(int32 EmpireIndex) const
 {
 	if (EmpireAssets.IsValidIndex(EmpireIndex))
-		return EmpireAssets[EmpireIndex];
+		return Cast<UAoAEmpireData>(EmpireAssets[EmpireIndex]);
 	return nullptr;
 }
 
