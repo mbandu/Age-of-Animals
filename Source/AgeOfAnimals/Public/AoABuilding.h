@@ -137,3 +137,4 @@ protected:
 	void SpawnTrainedUnit(UClass* UnitClass);
 	AActor* FindEnemyInRadius() const;
 };
+

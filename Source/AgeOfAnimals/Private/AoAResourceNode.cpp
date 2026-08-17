@@ -1,49 +1,17 @@
 #include "AoAResourceNode.h"
-#include "Net/UnrealNetwork.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 
 AAoAResourceNode::AAoAResourceNode()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	bReplicates = true;
-
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	RootComponent = MeshComponent;
-	MeshComponent->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	MeshComponent->SetWorldScale3D(FVector(0.5f, 0.5f, 0.5f));
 }
 
-void AAoAResourceNode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AAoAResourceNode, ResourceType);
-	DOREPLIFETIME(AAoAResourceNode, RemainingAmount);
-	DOREPLIFETIME(AAoAResourceNode, MaxAmount);
-}
-
-void AAoAResourceNode::BeginPlay()
-{
-	Super::BeginPlay();
-	if (MaxAmount == 0) MaxAmount = 400;
-	if (RemainingAmount == 0) RemainingAmount = MaxAmount;
-}
-
-void AAoAResourceNode::Initialize(EResourceType Type, int32 Amount)
-{
-	ResourceType = Type;
-	MaxAmount = Amount;
-	RemainingAmount = Amount;
-
-	// Update mesh based on type
-	// In a complete build, swap the mesh component's mesh
-}
-
-void AAoAResourceNode::Harvest(int32 Amount)
-{
-	if (!HasAuthority()) return;
-	RemainingAmount = FMath::Max(0, RemainingAmount - Amount);
-	if (RemainingAmount <= 0)
-	{
-		// Resource depleted — destroy after a delay
-		SetLifeSpan(2.0f);
-	}
-}
+void AAoAResourceNode::BeginPlay() { Super::BeginPlay(); UStaticMesh* M = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere")); if (M && MeshComponent) MeshComponent->SetStaticMesh(M); }
+void AAoAResourceNode::Harvest(int32 A) { RemainingAmount = FMath::Max(0, RemainingAmount - A); if (RemainingAmount <= 0) SetLifeSpan(2.0f); }
+void AAoAResourceNode::Initialize(EResourceType T, int32 A) { ResourceType = T; MaxAmount = A; RemainingAmount = A; }
+void AAoAResourceNode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& P) const { Super::GetLifetimeReplicatedProps(P); }

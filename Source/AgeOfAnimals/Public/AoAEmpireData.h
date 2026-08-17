@@ -76,11 +76,11 @@ public:
 
 	/** Unit data assets for this empire — index matches EUnitRole */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Units")
-	TArray<TObjectPtr<class UAoAUnitData>> Units;
+	TArray<UObject*> Units;
 
 	/** Building data assets for this empire — index matches EBuildingRole */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Buildings")
-	TArray<TObjectPtr<class UAoABuildingData>> Buildings;
+	TArray<UObject*> Buildings;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
 	TObjectPtr<USoundBase> SelectSound;
@@ -90,4 +90,5 @@ public:
 
 
 };
+
 

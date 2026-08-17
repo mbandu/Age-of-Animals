@@ -4,43 +4,63 @@
 #include "AoAPlayerController.h"
 #include "AoAUnit.h"
 #include "AoABuilding.h"
+#include "AoAResourceNode.h"
 #include "AoAGameInstance.h"
 #include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
-#include "Math/UnrealMathUtility.h"
+#include "Engine/StaticMeshActor.h"
+#include "Engine/StaticMesh.h"
+#include "Engine/Engine.h"
 
 AAoAGameMode::AAoAGameMode()
 {
-	// Use C++ classes directly — Blueprint subclasses can be created later
 	PlayerControllerClass = AAoAPlayerController::StaticClass();
 	GameStateClass = AAoAGameState::StaticClass();
 	PlayerStateClass = AAoAPlayerState::StaticClass();
-
-	bUseSeamlessTravel = true;
 }
 
 void AAoAGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
+	if (RandomSeed == 0) RandomSeed = FMath::Rand();
+}
 
-	if (RandomSeed == 0)
-		RandomSeed = FMath::Rand();
+void AAoAGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	UWorld* World = GetWorld();
+	if (!World) return;
 
-	auto* GI = Cast<UAoAGameInstance>(GetGameInstance());
-	if (GI)
+	// Spawn ground
+	AStaticMeshActor* Ground = World->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector(0,0,0), FRotator::ZeroRotator);
+	if (Ground)
 	{
-		FString MatchTypeStr = UGameplayStatics::ParseOption(Options, TEXT("MatchType"));
-		if (MatchTypeStr == TEXT("LAN"))
-			MatchType = EMatchType::LANHost;
-		else if (MatchTypeStr == TEXT("Online"))
-			MatchType = EMatchType::OnlineMatch;
+		Ground->SetActorScale3D(FVector(50,50,1));
+		UStaticMesh* PlaneMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Plane.Plane"));
+		if (PlaneMesh) Ground->GetStaticMeshComponent()->SetStaticMesh(PlaneMesh);
+		Ground->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	}
 
-	if (auto* GS = Cast<AAoAGameState>(GameState))
+	// Spawn resources
+	for (int32 i = 0; i < 10; ++i)
 	{
-		GS->MatchSeed = FString::Printf(TEXT("%d"), RandomSeed);
-		GS->Phase = EGamePhase::Preparing;
+		float X = FMath::RandRange(-2000, 2000);
+		float Y = FMath::RandRange(-2000, 2000);
+		AAoAResourceNode* Res = World->SpawnActor<AAoAResourceNode>(AAoAResourceNode::StaticClass(), FVector(X,Y,0), FRotator::ZeroRotator);
+		if (Res) { Res->RemainingAmount = 400; Res->MaxAmount = 400; }
 	}
+
+	// Spawn starting base
+	for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
+	{
+		if (auto* PC = Cast<AAoAPlayerController>(It->Get()))
+		{
+			SpawnStartingBase(PC, FVector(0, 0, 100));
+			break;
+		}
+	}
+
+	if (auto* GS = Cast<AAoAGameState>(GameState)) { GS->Phase = EGamePhase::Playing; }
 }
 
 void AAoAGameMode::SpawnStartingBase(AAoAPlayerController* PC, const FVector& Location)
@@ -48,101 +68,21 @@ void AAoAGameMode::SpawnStartingBase(AAoAPlayerController* PC, const FVector& Lo
 	if (!PC) return;
 	auto* PS = Cast<AAoAPlayerState>(PC->PlayerState);
 	if (!PS) return;
+	UWorld* World = GetWorld();
+	if (!World) return;
+	GiveStartingResources(PS);
 
-	// Spawn town center
-	if (TownCenterClass)
-	{
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = PC;
-		auto* TC = GetWorld()->SpawnActor<AAoABuilding>(TownCenterClass, Location, FRotator::ZeroRotator, SpawnParams);
-		if (TC)
-		{
-			TC->SetOwnerPlayer(PS->GetPlayerId());
-			TC->SetEmpireIndex(PS->EmpireIndex);
-			TC->FinishConstruction();
-		}
-	}
+	auto* TC = World->SpawnActor<AAoABuilding>(AAoABuilding::StaticClass(), Location, FRotator::ZeroRotator);
+	if (TC) { TC->SetOwnerPlayer(PS->GetPlayerId()); TC->SetEmpireIndex(PS->EmpireIndex); TC->FinishConstruction(); }
 
-	// Spawn starting villagers around the TC
-	if (VillagerClass)
+	for (int32 i = 0; i < 4; ++i)
 	{
-		for (int32 i = 0; i < StartVillagers; ++i)
-		{
-			float Angle = i * (2.0f * PI / StartVillagers);
-			FVector Offset(FMath::Cos(Angle) * 200.0f, FMath::Sin(Angle) * 200.0f, 0.0f);
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = PC;
-			auto* Villager = GetWorld()->SpawnActor<AAoAUnit>(VillagerClass, Location + Offset, FRotator::ZeroRotator, SpawnParams);
-			if (Villager)
-			{
-				Villager->SetOwnerPlayer(PS->GetPlayerId());
-				Villager->SetEmpireIndex(PS->EmpireIndex);
-			}
-		}
+		float Angle = i * (6.283f / 4.0f);
+		FVector Off(FMath::Cos(Angle)*200.0f, FMath::Sin(Angle)*200.0f, 50.0f);
+		auto* V = World->SpawnActor<AAoAUnit>(AAoAUnit::StaticClass(), Location + Off, FRotator::ZeroRotator);
+		if (V) { V->SetOwnerPlayer(PS->GetPlayerId()); V->SetEmpireIndex(PS->EmpireIndex); }
 	}
 }
 
-FVector AAoAGameMode::FindSpawnLocation() const
-{
-	float MapExtent = MapSize.X * 100.0f;
-	TArray<FVector> Candidates;
-	Candidates.Add(FVector(MapExtent * 0.2f, MapExtent * 0.2f, 0.0f));
-	Candidates.Add(FVector(MapExtent * 0.8f, MapExtent * 0.8f, 0.0f));
-	Candidates.Add(FVector(MapExtent * 0.2f, MapExtent * 0.8f, 0.0f));
-	Candidates.Add(FVector(MapExtent * 0.8f, MapExtent * 0.2f, 0.0f));
-	Candidates.Add(FVector(MapExtent * 0.5f, MapExtent * 0.5f, 0.0f));
-
-	int32 Index = UsedSpawnLocations.Num();
-	if (Candidates.IsValidIndex(Index))
-		return Candidates[Index];
-	return FVector(MapExtent * 0.5f, MapExtent * 0.5f, 0.0f);
-}
-
-void AAoAGameMode::GiveStartingResources(AAoAPlayerState* PS)
-{
-	if (!PS) return;
-	PS->Food = StartFood;
-	PS->Wood = StartWood;
-	PS->Stone = StartStone;
-}
-
-void AAoAGameMode::NotifyPlayerEliminated(int32 PlayerId)
-{
-	if (auto* GS = Cast<AAoAGameState>(GameState))
-	{
-		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-		{
-			auto* PS = Cast<AAoAPlayerState>(It->Get()->PlayerState);
-			if (PS && PS->GetPlayerId() == PlayerId)
-			{
-				PS->bIsAlive = false;
-			}
-		}
-		CheckWinCondition();
-	}
-}
-
-void AAoAGameMode::CheckWinCondition()
-{
-	if (auto* GS = Cast<AAoAGameState>(GameState))
-	{
-		TArray<int32> AlivePlayers;
-		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-		{
-			auto* PS = Cast<AAoAPlayerState>(It->Get()->PlayerState);
-			if (PS && PS->bIsAlive)
-				AlivePlayers.Add(PS->GetPlayerId());
-		}
-
-		if (AlivePlayers.Num() == 1)
-		{
-			GS->WinnerPlayerId = AlivePlayers[0];
-			GS->Phase = EGamePhase::Ended;
-		}
-		else if (AlivePlayers.Num() == 0)
-		{
-			GS->WinnerPlayerId = -1;
-			GS->Phase = EGamePhase::Ended;
-		}
-	}
-}
+void AAoAGameMode::CheckWinCondition() {}
+void AAoAGameMode::GiveStartingResources(AAoAPlayerState* PS) { if (PS) { PS->Food = StartFood; PS->Wood = StartWood; PS->Stone = StartStone; } }

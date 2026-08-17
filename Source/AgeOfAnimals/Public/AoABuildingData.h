@@ -63,7 +63,7 @@ public:
 
 	/** Unit composite indices this building can train */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Production")
-	TArray<TObjectPtr<UAoAUnitData>> TrainableUnits;
+	TArray<UObject*> TrainableUnits;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visuals")
 	TObjectPtr<UStaticMesh> BuildingMesh;
@@ -76,3 +76,4 @@ public:
 
 
 };
+
